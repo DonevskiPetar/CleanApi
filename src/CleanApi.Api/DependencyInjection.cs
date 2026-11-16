@@ -8,6 +8,9 @@ public static class DependencyInjection
     {
         services.AddControllers();
 
+        // ProductsController -> /api/products (also applies to generated links such as the Location header).
+        services.AddRouting(options => options.LowercaseUrls = true);
+
         services.AddProblemDetails(options => options.CustomizeProblemDetails = context =>
             context.ProblemDetails.Instance ??= $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}");
 
