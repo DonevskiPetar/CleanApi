@@ -1,0 +1,36 @@
+@HostAddress = http://localhost:5128
+@productId = 00000000-0000-0000-0000-000000000000
+
+### List products
+GET {{HostAddress}}/api/products?page=1&pageSize=20
+Accept: application/json
+
+### Get product by id
+GET {{HostAddress}}/api/products/{{productId}}
+Accept: application/json
+
+### Create product
+POST {{HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Keyboard",
+  "description": "Mechanical keyboard",
+  "price": 89.99
+}
+
+### Update product
+PUT {{HostAddress}}/api/products/{{productId}}
+Content-Type: application/json
+
+{
+  "name": "Keyboard",
+  "description": "Mechanical keyboard, brown switches",
+  "price": 79.99
+}
+
+### Delete product
+DELETE {{HostAddress}}/api/products/{{productId}}
+
+### Health
+GET {{HostAddress}}/health

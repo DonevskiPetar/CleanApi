@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/CleanApi.Api/CleanApi.Api.csproj" />
+    <Project Path="src/CleanApi.Application/CleanApi.Application.csproj" />
+    <Project Path="src/CleanApi.Domain/CleanApi.Domain.csproj" />
+    <Project Path="src/CleanApi.Infrastructure/CleanApi.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CleanApi.Api.UnitTests/CleanApi.Api.UnitTests.csproj" />
+    <Project Path="tests/CleanApi.Application.UnitTests/CleanApi.Application.UnitTests.csproj" />
+    <Project Path="tests/CleanApi.Domain.UnitTests/CleanApi.Domain.UnitTests.csproj" />
+  </Folder>
+</Solution>
