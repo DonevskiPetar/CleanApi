@@ -14,5 +14,6 @@
     <Project Path="tests/CleanApi.Api.UnitTests/CleanApi.Api.UnitTests.csproj" />
     <Project Path="tests/CleanApi.Application.UnitTests/CleanApi.Application.UnitTests.csproj" />
     <Project Path="tests/CleanApi.Domain.UnitTests/CleanApi.Domain.UnitTests.csproj" />
+    <Project Path="tests/CleanApi.Infrastructure.UnitTests/CleanApi.Infrastructure.UnitTests.csproj" />
   </Folder>
 </Solution>

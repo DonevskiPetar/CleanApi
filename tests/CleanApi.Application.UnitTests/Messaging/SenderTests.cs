@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using CleanApi.Application.Abstractions.Caching;
 using CleanApi.Application.Abstractions.Messaging;
 using CleanApi.Application.Abstractions.Persistence;
 using CleanApi.Application.Common.Exceptions;
@@ -16,6 +17,7 @@ public sealed class SenderTests
         services.AddApplication();
         services.AddScoped(_ => Substitute.For<IProductRepository>());
         services.AddScoped(_ => Substitute.For<IUnitOfWork>());
+        services.AddSingleton(_ => Substitute.For<ICacheService>());
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
     }
 
