@@ -1,5 +1,10 @@
+using CleanApi.Application.Abstractions.Caching;
 using CleanApi.Application.Abstractions.Messaging;
 
 namespace CleanApi.Application.Features.Products.Commands.CreateProduct;
 
-public sealed record CreateProductCommand(string Name, string? Description, decimal Price) : ICommand<ProductResponse>;
+public sealed record CreateProductCommand(string Name, string? Description, decimal Price)
+    : ICommand<ProductResponse>, ICacheInvalidatingCommand
+{
+    IReadOnlyCollection<string> ICacheInvalidatingCommand.CacheTagsToInvalidate => [ProductCacheKeys.ListTag];
+}

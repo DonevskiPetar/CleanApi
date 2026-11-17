@@ -43,6 +43,7 @@ tests/
   CleanApi.Domain.UnitTests        Entities and Result type.
   CleanApi.Application.UnitTests   Handlers (NSubstitute mocks), validators, mapper, mediator pipeline.
   CleanApi.Api.UnitTests           Global exception handler, Error → HTTP status mapping.
+  CleanApi.Infrastructure.UnitTests HybridCache-backed cache service (in-memory, no Redis needed).
 ```
 
 ## Environments
@@ -120,6 +121,30 @@ automatically on the first run in Development. LocalDB starts on demand; nothing
   `dotnet user-secrets set "ConnectionStrings:Database" "<connection string>" --project src/CleanApi.Api`.
 - PostgreSQL: swap the provider package for `Npgsql.EntityFrameworkCore.PostgreSQL`, replace `UseSqlServer`,
   delete `Persistence/Migrations` and add a new initial migration.
+
+## Caching (Redis)
+
+Queries are cached with [HybridCache](https://learn.microsoft.com/aspnet/core/performance/caching/hybrid): an in-memory
+L1 in each instance and Redis as the shared L2. Redis is optional. When `ConnectionStrings:Redis` is empty, each
+instance uses its own in-memory cache, which is fine for local development and single-instance hosting.
+
+```bash
+docker run -d --name redis -p 6379:6379 redis:7-alpine
+dotnet user-secrets set "ConnectionStrings:Redis" "localhost:6379,abortConnect=false" --project src/CleanApi.Api
+# other environments: ConnectionStrings__Redis="<host>:6380,password=<key>,ssl=True,abortConnect=False"
+```
+
+- **Cache a query**: implement `ICachedQuery<T>` instead of `IQuery<T>` and give it a `CacheKey` and `CacheTags`
+  (optionally a `CacheExpiration`). `CachingBehavior` runs after validation, and only successful results are cached
+  (a `NotFound` is never cached).
+- **Invalidate**: implement `ICacheInvalidatingCommand` on the command and list the tags it makes stale.
+  `CacheInvalidationBehavior` evicts them after the handler succeeds. For products, keys and tags live in
+  `ProductCacheKeys`: `GetProductById` is tagged `products:{id}`, and every list page is tagged `products:list`.
+- **Settings** (`Caching` section): `DefaultExpiration` (Redis TTL, 5 min), `LocalExpiration` (in-memory TTL, 1 min)
+  and `InstanceName` (Redis key prefix).
+- **Multiple instances**: tag invalidation reaches Redis and the instance that handled the write. Other instances keep
+  their in-memory copy until `LocalExpiration`, so keep that value short.
+- Values are serialized with System.Text.Json, so cached response types must round-trip through JSON.
 
 ## Ideas for next steps
 
